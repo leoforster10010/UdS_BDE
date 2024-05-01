@@ -1,0 +1,28 @@
+\input{header}
+\input{macros}
+\sheet{1}
+\begin{document}
+
+\section{ER modelling}
+
+\includegraphics[width=\textwidth]{1.drawio.png}
+
+\section{Design errors in ER modelling}
+
+\includegraphics[width=\textwidth]{2.drawio.png}
+
+\section{Ternary relationship}
+
+\begin{itemize}
+	\item[1.] False, because professors are denoted with 1, which means that in every term at most one professor can teach a course.
+	\item[2.] False, because one course can at most be held by one professor in a single term.
+	\item[3.] Correct. A professor can at most teach one course per term, because it is a 1:N relation.
+	\item[4.] False. A professor could teach a course in one term and another one in another term. It is only said that a professor can at most teach one course in one term, not how many different courses he can teach in different terms.
+	\item[5.] False. It is only said that a course can be held by at most one professor in one term. So professor A could teach course B in term 1 and 2. 
+\end{itemize}
+
+\section{IMDb singers}
+
+\includegraphics[width=\textwidth]{4.drawio.png}
+
+\end{document}
