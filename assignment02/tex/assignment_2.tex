@@ -1,0 +1,18 @@
+\input{header}
+\input{macros}
+\sheet{1}
+\begin{document}
+	
+\section{Translation to the Relational Model}
+
+\begin{itemize}
+	\item[] [users] : \{[\underline{username: varchar}, email: varchar, join\_date: date]\}
+	\item[] [viewers] : \{[\underline{id: (users)}, watchtime: time]\}
+	\item[] [creators] : \{[\underline{id: (users)}, total\_views: int]\}
+	\item[] [channels] : \{[\underline{id: int}, name: varchar, owner: (creators)]\}
+	\item[] [comments] : \{[\underline{id: int}, text: varchar, author: (viewers), video: (videos), timestamp: datetime]\}
+	\item[] [videos] : \{[\underline{id: int}, title: varchar, description: varchar, duration: time, views: int, creator: (creators), editing\_software: varchar]\}
+	\item[] [subscribe] : \{[\underline{viewer: (viewers), channel: (channels)}]\}
+\end{itemize}
+
+\end{document}
