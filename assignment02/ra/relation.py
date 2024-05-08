@@ -1,7 +1,7 @@
-import pandas as pd
-import math
 import bisect
 import operator
+
+import pandas as pd
 
 
 ##################

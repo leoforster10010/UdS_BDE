@@ -7,39 +7,37 @@ class KeyRelation(Relation):
     # keys: names of the key attributes as a list
     def __init__(self, name, schema, keys):
         super().__init__(name, schema)
-        
+
         # assert that the list of keys is subset-equal self-attributes:
         assert set(keys) <= set(self.attributes)
         # make sure that at least one key attribute is defined:
         assert len(keys) >= 1
-        
+
         # initialize data structures that are required
         # to check the key constraint for new tuples
-        self.keys = keys
-        self.key_dict = {}
-        self.unique_keys = set()
+        self.key_attributes = set(keys)
+        self.key_values = set()
         pass
-        
+
     def add_tuple(self, tup):
         # add your code here!
-        key_positions = [self.attributes.index(key) for key in self.keys]
-        
+        key_positions = [self.attributes.index(key) for key in self.key_attributes]
         key = tuple(tup[i] for i in key_positions)
-        
+
         # check if there is a tuple with the same key in the relation
-        if key in self.key_dict:
+        if key in self.key_values:
             raise ValueError("key already exists") # raises ValueError
-            
+
         # only insert it using super().add_tuple(tup) if there is not.
         super().add_tuple(tup)
-        
-        self.key_dict[key] = tup
-        self.unique_keys.add(key)
+
+        self.key_values.add(key)
         pass
-        
+
     def print_schema(self):
         super().print_schema()
-    
+
         print(f"key attributes: {', '.join(self.keys)}")
-        
+
         pass
+
