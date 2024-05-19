@@ -1,0 +1,81 @@
+\input{header}
+\input{macros}
+\sheet{1}
+\begin{document}
+
+\section{ Relational Algebra and SQL}	
+
+\subsection{a$)$}
+
+\begin{lstlisting}[language=SQL]
+	-- 1.
+	SELECT b.title
+	FROM books AS b
+	JOIN authors AS a ON b.author = a.aid
+	WHERE b.year > 1989 AND a.salary != 1500;
+\end{lstlisting}
+
+\begin{lstlisting}[language=SQL]
+	-- 2.
+	SELECT genre
+	FROM (
+		SELECT b.genre
+		FROM borrow b
+		JOIN books ON b.book = books.bid
+		WHERE b.borrow\_date = '16.05.2024'
+		GROUP BY b.genre
+		HAVING COUNT(*) > 10
+		AS filtered\_genres;
+	)
+\end{lstlisting}
+
+\subsection{b$)$}
+
+\begin{itemize}
+	\item[1.] $\pi * ({\sigma}_{late\_fees = 0} members) ({\sigma}_{city \neq 'Saarbruecken'} libraries) \Join ({\sigma}_{member = mid} membership)$
+	\item[2.] ${\pi}_{avg\_late\_fees} ()$
+\end{itemize}
+	
+\section{Natural Language and SQL}	
+
+\subsection{a$)$}
+
+\begin{lstlisting}[language=SQL]
+	-- 1.
+	SELECT DISTINCT b.car
+	FROM buy b
+	LEFT JOIN repair r ON b.car = r.car AND r.reason = 'broken clutch'
+	WHERE YEAR(b.date_of_purchase) < 2015 AND r.car IS NULL;
+\end{lstlisting}
+
+\begin{lstlisting}[language=SQL]
+	-- 2.
+	SELECT m.mid 
+	FROM mechanics m
+	JOIN repair r ON m.mid = r.mechanic
+	JOIN cars c ON r.car = c.id
+	GROUP BY m.mid
+	HAVING COUNT(r.start) > 5 AND MAX(DATEDIFF(MONTH, r.start, r.end)) < 6 AND c.horsepower = 250;  
+	
+\end{lstlisting}
+
+\subsection{b$)$}
+
+\begin{itemize}
+	\item[1.] Find the unique cities and salaries of mechanics who have serviced more than one Volkswagen Golf GTI vehicle
+	\item[2.] Give a list of full names of the top ten earning mechanics, sorted by decreasing age, who earn more than 4000 per year and don’t have the last name Smith.
+\end{itemize}
+	
+\section{SQL Debugging}
+
+\begin{itemize}
+	\item[] [users] : \{[\underline{username: varchar}, email: varchar, join\_date: date]\}
+	\item[] [viewers] : \{[\underline{id: (users)}, watchtime: time]\}
+	\item[] [creators] : \{[\underline{id: (users)}, total\_views: int]\}
+	\item[] [channels] : \{[\underline{id: int}, name: varchar, owner: (creators)]\}
+	\item[] [comments] : \{[\underline{id: int}, text: varchar, author: (viewers), video: (videos), timestamp: datetime]\}
+	\item[] [videos] : \{[\underline{id: int}, title: varchar, description: varchar, duration: time, views: int, creator: (creators), editing\_software: varchar]\}
+	\item[] [subscribe] : \{[\underline{viewer: (viewers), channel: (channels)}]\}
+\end{itemize}
+
+\end{document}
