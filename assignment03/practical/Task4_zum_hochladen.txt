@@ -4,13 +4,10 @@ duckdb.sql("""
 CREATE VIEW q1 AS
     select s.bonus
     from seniors as s
-    join employees as e on s.employeeId = e.personId
-    join persons as pe on e.personId = pe.id
-    join photographers as p on e.personId = p.employeeId
-    join photos as ph on p.employeeId = ph.photographerId
+    join photos as ph on s.employeeId = ph.photographerId
     join cameras as c on ph.cameraId = c.id
     where c.brand = 'Nikon'
-    group by pe.id, pe.firstname, pe.lastname, s.bonus
+    group by s.employeeId, s.bonus
     having count(ph.id) > 2
     ;
 """)
@@ -22,8 +19,7 @@ CREATE VIEW q2 AS
     select distinct c.brand
     from cameras as c
     join photos as ph on c.id = ph.cameraId
-    join photographers as p on ph.photographerId = p.employeeId
-    join employees as e on p.employeeId = e.personId
+    join employees as e on ph.photographerId = e.personId
     where e.salary > (
         select avg(e.salary)
         from employees as e

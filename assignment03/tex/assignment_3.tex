@@ -9,7 +9,7 @@
 
 \begin{lstlisting}[language=SQL]
 	-- 1.
-	SELECT b.title
+	SELECT DISTINCT b.title
 	FROM books AS b
 	JOIN authors AS a ON b.author = a.aid
 	WHERE b.year > 1989 AND a.salary != 1500;
@@ -17,15 +17,14 @@
 
 \begin{lstlisting}[language=SQL]
 	-- 2.
-	SELECT genre
+	SELECT b.genre
 	FROM (
-		SELECT b.genre
+		SELECT *
 		FROM borrow b
 		JOIN books ON b.book = books.bid
-		WHERE b.borrow\_date = '16.05.2024'
+		WHERE b.borrow_date = '16.05.2024'
 		GROUP BY b.genre
 		HAVING COUNT(*) > 10
-		AS filtered\_genres;
 	)
 \end{lstlisting}
 
@@ -68,14 +67,52 @@
 	
 \section{SQL Debugging}
 
+\subsection{}
+
 \begin{itemize}
-	\item[] [users] : \{[\underline{username: varchar}, email: varchar, join\_date: date]\}
-	\item[] [viewers] : \{[\underline{id: (users)}, watchtime: time]\}
-	\item[] [creators] : \{[\underline{id: (users)}, total\_views: int]\}
-	\item[] [channels] : \{[\underline{id: int}, name: varchar, owner: (creators)]\}
-	\item[] [comments] : \{[\underline{id: int}, text: varchar, author: (viewers), video: (videos), timestamp: datetime]\}
-	\item[] [videos] : \{[\underline{id: int}, title: varchar, description: varchar, duration: time, views: int, creator: (creators), editing\_software: varchar]\}
-	\item[] [subscribe] : \{[\underline{viewer: (viewers), channel: (channels)}]\}
+	\item GROUP BY should be after the WHERE
+	\item JOIN should use 'c.id' and 'p.cameraId'
+	\item NULL AS NOT\_NULL doesn't provide any meaningful information for this query
+	\item 'location' is an ambigouus colum definition. Should be 'p.location'.
 \end{itemize}
+
+\begin{lstlisting}[language=SQL]
+	-- Corrected Query
+	SELECT p.location
+	FROM cameras AS c 
+	JOIN photos AS p ON c.id = p.cameraId
+	WHERE location LIKE '%bruecken'
+	GROUP BY location;
+\end{lstlisting}
+
+\subsection{}
+
+\begin{itemize}
+	\item 'measureOfAge' is an alias for a aggregated column, so it can't be used in the GROUP BY clause.
+	\item JOIN on employees is needed for 'experience' in the WHERE clause.
+	\item sum() on 's.numGreyHairs' is unnecessary, since it will only sum up single values.
+\end{itemize}
+
+\begin{lstlisting}[language=SQL]
+	-- Corrected Query
+	SELECT s.numGreyHairs AS measureOfAge
+	FROM seniors AS s
+	JOIN employees AS e ON s.employeeId = e.personId
+	WHERE e.experience > 42;
+\end{lstlisting}
+
+\subsection{}
+
+\begin{itemize}
+	\item HAVING is used on GROUP BY aggregations, should be WHERE instead.
+	\item Without aggregation sum() on 'experience' is unnecessary, since it will only sum up single values.
+\end{itemize}
+
+\begin{lstlisting}[language=SQL]
+	-- Corrected Query
+	SELECT salary
+	FROM employees
+	WHERE experience > 5;
+\end{lstlisting}
 
 \end{document}
