@@ -31,8 +31,13 @@
 \subsection{b$)$}
 
 \begin{itemize}
-	\item[1.] $\pi * ({\sigma}_{late\_fees = 0} members) ({\sigma}_{city \neq 'Saarbruecken'} libraries) \Join ({\sigma}_{member = mid} membership)$
-	\item[2.] ${\pi}_{avg\_late\_fees} ()$
+	\item[1.] ${\sigma_{city \neq 'Saarbruecken'}(libraries {\Join}_{lid = libraries} (membership {\Join}_{member = mid} members))}$
+	\item[2.] $R_1 := members {\Join}_{favorite\_author=aid} ({\sigma}_{salary > 2000} authors)$
+	
+			  $R_2 := {\sigma}_{sum(late\_fees) = 100} ({\gamma}_{reservation\_date, sum(late\_fees)} (reserve {\Join}_{member = mid} R_1))$
+			  
+			  ${\gamma}_{avg(late\_fees) R_2}$
+		
 \end{itemize}
 	
 \section{Natural Language and SQL}	
