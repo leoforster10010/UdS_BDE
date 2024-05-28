@@ -1,0 +1,85 @@
+SQL:
+duckdb.sql("DROP VIEW IF EXISTS suspiciousOrders;")
+
+duckdb.sql("""
+CREATE VIEW suspiciousOrders AS
+    select p.citizen_id, a.label, round(sum(p.amount),2) as amount
+    from purchases as p
+    join articles as a on p.article_id = a.id
+    where p.date between '1943-11-19 15:00:00' and '1943-11-24 15:00:00' and a.label = 'Apple'
+    group by p.citizen_id, a.label
+    having sum(p.amount) >= 2
+    union
+    select p.citizen_id, a.label, round(sum(p.amount),2) as amount
+    from purchases as p
+    join articles as a on p.article_id = a.id
+    where p.date between '1943-11-19 15:00:00' and '1943-11-24 15:00:00' and a.label = 'Onion'
+    group by p.citizen_id, a.label
+    having sum(p.amount) >= 1
+    union
+    select p.citizen_id, a.label, round(sum(p.amount),2) as amount
+    from purchases as p
+    join articles as a on p.article_id = a.id
+    where p.date between '1943-11-19 15:00:00' and '1943-11-24 15:00:00' and a.label = 'Carrot'
+    group by p.citizen_id, a.label
+    having sum(p.amount) >=0.5;
+""")
+
+duckdb.sql("DROP VIEW IF EXISTS suspects;")
+
+duckdb.sql("""
+CREATE VIEW suspects AS
+    select distinct firstname as First_Name, lastname as Last_Name
+    from citizens as ci
+    join live_in as li on ci.id = li.citizen_id
+    join households as h on li.household_id = h.id
+    join suspiciousOrders as so on ci.id = so.citizen_id
+    where h.street like '%13' OR h.street like '%bucht%' OR h.street like 'Kor%'
+    order by firstname, lastname
+""")
+
+duckdb.sql("SELECT * FROM suspects")
+
+EXPLANATION:
+Here we see the earlies and last purchase of citizens in the relevant timeframe 
+('1943-11-19 15:00:00' to '1943-11-24 15:00:00')
+┌────────────┬─────────────────────┬─────────────────────┐
+│ citizen_id │  earlies_purchase   │   latest_purchase   │
+├────────────┼─────────────────────┼─────────────────────┤
+│         41 │ 1943-11-21 10:23:54 │ 1943-11-24 08:25:17 │
+│         42 │ 1943-11-19 15:14:09 │ 1943-11-21 08:23:11 │
+│         43 │ 1943-11-22 14:15:38 │ 1943-11-23 17:19:45 │
+└────────────┴─────────────────────┴─────────────────────┘
+
+
+
+Next we need to look for the orders by the citizens and check,
+if they bought the required amount of groceries to make the poison
+
+The maximum amount purchased is not taken into account,
+cause you can buy more than you use.
+
+┌────────────┬───────────┬──────────┬─────────┬──────────────┐
+│ citizen_id │ firstname │ lastname │  label  │ amount_in_Kg │
+├────────────┼───────────┼──────────┼─────────┼──────────────┤
+│         41 │ Norman    │ Bates    │ Carrot  │          0.5 │
+│         41 │ Norman    │ Bates    │ Onion   │          3.0 │
+│         41 │ Norman    │ Bates    │ Apple   │          2.3 │
+│         42 │ Henri     │ Schmidt  │ Carrot  │          3.0 │
+│         42 │ Henri     │ Schmidt  │ Onion   │          1.0 │
+│         42 │ Henri     │ Schmidt  │ Apple   │          2.0 │
+└────────────┴───────────┴──────────┴─────────┴──────────────┘
+
+After this, we can already see, that there are only two Suspects left, that purchased
+the right amount of poison ingredients at the given timeframe.
+
+
+Lastly we need to take the legible information of the witnesses.
+there we see, that the only suspect left is.
+┌────────────┬───────────┐
+│ First_Name │ Last_Name │
+├────────────┼───────────┤
+│ Norman     │ Bates     │
+└────────────┴───────────┘
+Based on this data we can define a main suspect, however it is not certain,
+because some other citizen could have bought groceries for someone else, etc.
