@@ -5,21 +5,31 @@
 
 \section{Deanonymization}	
 
+Using Table 2, we can infer possible favorite movie/series candidates for each person, using the assumption, that each person gives their favorites a full 5 star rating. Analog, we can infer possible non-favorites, using the assumption, that, when a review has less than 5 stars, the movie or series is not a favorite of this person.
+
+\begin{itemize}
+	\item[Anna:] favorite: Avatar 2, non-favorite: The Last Of Us
+	\item[Josh:] favorite: Black Panther 2, non-favorite: rick and Morty, Lost
+	\item[Lewis:] favorite: n.a., non-favorite: Scream, El Camino
+	\item[Lisa:] favorite: Avatar 2, non-favorite: Spider-Man: No Way Home
+	\item[Sarah:] favorite: Spider-Man: No Way Home, non-favorite: n.a.
+	\item[Tim:] favorite: Rick and Morty, non-favorite: The Big Bang Theory
+\end{itemize}
+
 \subsection{$($a$)$}
 
 \begin{itemize}
 	\item[Sarah:] You can link Sarah to the 5th entry of the first table, revealing her gender, age, city, favorite movie \& series and her relationship status. \\
-	You can link the entry to Sarah, because Lisa, who is the only other person who reviewed Spider-Man: No Way Home gave a bad rating, which then doesn't make sense to be her favorite movie.
-	\item[Anna:] For Anna, only the 5th \& last entries qualify based on her two reviews, but only the last entry really makes sense, because The Last of Us recieved a bad rating from her and she probably wouldn't rate her favorite series like this.\\
-	But, in this case, Lisa qualifies equally likely to the last data set, because she gave Avatar 2 an equally good review, which could also be her favorite movie. So you can't extract information about Anna from the first table.
+	You can link the entry to Sarah, because she is the only one having Spider-Man: No Way Home under her favorite-candidates. Also, having not left a review about The Last of Us doesn't contradict this being her favorite series.
+	\item[Anna:] For Anna, only the last entry qualify based on her possible favorites/ non-favorites, but, using this criteria, Lisa qualifies equally likely in this case, because both have Avatar 2 under their favorite-candidates. So you can't extract information about Anna from the first table.
 \end{itemize}
 
 \subsection{$($b$)$}
 
 \begin{itemize}
 	\item[Row 2:] Sam, since Lewis ratings would be incosistent with El Camino being his favorite movie, so only Sam remains
-	\item[Row 3:] Josh, gave Plack Panther 2 a good review, thus likely to be his favorite movie	
-	\item[Row 4:] Tim, gave Rick and Morty a good review, thus likely to be his favorite series
+	\item[Row 3:] Josh,only one who gave Plack Panther 2 a good review, thus likely to be his favorite movie	
+	\item[Row 4:] Tim, only one who gave Rick and Morty a good review, thus likely to be his favorite series
 	\item[Row 6:] Lewis, since his ratings don't contradict with Minions 2 \& Rick and Morty being his favorite movie/series
 \end{itemize}
 	
