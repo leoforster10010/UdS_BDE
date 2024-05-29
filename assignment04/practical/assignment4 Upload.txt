@@ -35,16 +35,18 @@ CREATE VIEW suspects AS
     join households as h on li.household_id = h.id
     join suspiciousOrders as so on ci.id = so.citizen_id
     where h.street like '%13' OR h.street like '%bucht%' OR h.street like 'Kor%'
+    group by ci.id, ci.firstname, ci.lastname
+    having count(*) >= 3
     order by firstname, lastname
 """)
 
 duckdb.sql("SELECT * FROM suspects")
 
 EXPLANATION:
-Here we see the earlies and last purchase of citizens in the relevant timeframe 
+Here we see the earliest and last purchase of citizens in the relevant timeframe 
 ('1943-11-19 15:00:00' to '1943-11-24 15:00:00')
 ┌────────────┬─────────────────────┬─────────────────────┐
-│ citizen_id │  earlies_purchase   │   latest_purchase   │
+│ citizen_id │  earliest_purchase   │   latest_purchase   │
 ├────────────┼─────────────────────┼─────────────────────┤
 │         41 │ 1943-11-21 10:23:54 │ 1943-11-24 08:25:17 │
 │         42 │ 1943-11-19 15:14:09 │ 1943-11-21 08:23:11 │
@@ -57,7 +59,7 @@ Next we need to look for the orders by the citizens and check,
 if they bought the required amount of groceries to make the poison
 
 The maximum amount purchased is not taken into account,
-cause you can buy more than you use.
+because you can buy more than you use.
 
 ┌────────────┬───────────┬──────────┬─────────┬──────────────┐
 │ citizen_id │ firstname │ lastname │  label  │ amount_in_Kg │
@@ -74,8 +76,8 @@ After this, we can already see, that there are only two Suspects left, that purc
 the right amount of poison ingredients at the given timeframe.
 
 
-Lastly we need to take the legible information of the witnesses.
-there we see, that the only suspect left is.
+Lastly we need to take the legible information about the addresses given by the witnesses.
+there we see, that the only suspect left is:
 ┌────────────┬───────────┐
 │ First_Name │ Last_Name │
 ├────────────┼───────────┤
