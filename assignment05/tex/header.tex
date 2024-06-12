@@ -1,0 +1,62 @@
+\documentclass{article}
+\usepackage{iftex}
+\ifluatex
+	\usepackage{fontspec}
+\else
+	\usepackage[utf8]{inputenc} %Eingabekodierung nach UTF8-Unicode, Erlaubt direkte Eingabe von Umlauten etc.
+\fi
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[ngerman]{babel}
+\usepackage{csquotes}
+
+\usepackage[headheight=24pt,heightrounded]{geometry}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{listings}
+
+\lstdefinestyle{mystyle}{
+	keywordstyle=\color{magenta},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+
+
+\usepackage{xcolor}
+\definecolor{urlcolor}{RGB}{0,136,204}
+\definecolor{linkcolor}{RGB}{204,0,34}
+\usepackage[colorlinks,urlcolor=urlcolor,linkcolor=linkcolor]{hyperref}
+
+% TODOs
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+
+% coloneqq
+\usepackage{mathtools}
+
+\usepackage{qtree}
+
+% Blank lines instead of indented first line
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\baselineskip}
+
+\newcommand{\sheet}[1]{
+\pagestyle{fancy}
+\fancyhead[L]{Big Data Engineering  \\ Assignment 5}
+\fancyhead[R]{Leo Forster \\ Maximilian Prinz \\ Bastian Simon}
+
+\titleformat{\section}
+{\normalfont\Large\bfseries}{\thesection.}{1em}{}
+
+}

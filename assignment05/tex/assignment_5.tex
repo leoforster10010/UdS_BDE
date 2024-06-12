@@ -1,0 +1,140 @@
+\input{header}
+\input{macros}
+\sheet{1}
+\begin{document}
+
+\section{From SQL to the Logical Plan}	
+
+\section{Heuristic Query Optimisation}
+	
+\subsection{$($a$)$}
+Applying predicate and projection pushdown:
+
+
+\Tree
+[.${\pi}_{A.r, C.a}$ 
+	[.${\Join}_{C.b=A.c}$ 
+		[.${\pi}_{A.r, A.c}$
+			[.${\Join}_{A.e=B.a}$ 
+				[.${\pi}_{A.r, A.c, A.e}$ 
+					[.${\sigma}_{A.u=8 \wedge A.j=12}$ 
+						[.${\pi}_{A.r, A.c, A.e, A.u, A.j}$ [.A ] ]
+					] 
+				] 
+				[.${\pi}_{B.a}$ 
+					[.${\sigma}_{B.t \geq 26}$ 
+						[.${\pi}_{B.a, B.t}$ [.B ] ]
+					]
+				]
+			] 
+		]
+		[.${\pi}_{C.a, C.b}$ 
+			[.${\Join}_{C.a=D.a}$
+				[.${\pi}_{C.a, C.b}$ 
+					[.${\sigma}_{C.t < 26}$ 
+						[.${\pi}_{C.a, C.b, C.t}$ [.C ] ]
+					]
+				]
+				[.${\pi}_{D.a}$ 
+					[.${\sigma}_{D.u < 19}$ 
+						[.${\pi}_{D.a, D.u}$ [.D ] ] 
+					]	
+				]
+			]
+		]
+	] 
+]
+
+
+\subsection{$($b$)$}
+
+\subsubsection{}
+
+\Tree
+[.${\pi}_{Q.m, R.o, S.a}$ 
+	[.${\sigma}_{R.t=S.b \wedge S.t \leq 33 \wedge S.u=T.s \wedge S.u \geq 27 \wedge R.e=18 \wedge Q.s=R.e \wedge T.b \geq 9}$ 
+		[.$\times$ 
+			[.$\times$ 
+				[.Q ] [.R ] 
+			] 
+			[.$\times$ 
+				[.S ] [.T ] 
+			] 
+		] 
+	] 
+]
+
+\subsubsection{}
+Applying predicate and projection pushdown:
+
+
+\Tree
+[.${\pi}_{Q.m, R.o, S.a}$ 
+	[.${\Join}_{R.t=S.b}$ 
+		[.${\pi}_{Q.m, R.o, R.t}$
+			[.${\Join}_{Q.s=R.e}$ 
+				[.${\pi}_{Q.m, Q.s}$
+					[.Q ] 
+				] 
+				[.${\sigma}_{R.e = 18}$ 
+					[.${\pi}_{R.o, R.t, R.e}$
+						[.R ] 
+					]  
+				] 
+			]
+		] 
+		[.${\pi}_{S.a, S.b}$
+			[.${\Join}_{S.u=T.s}$ 
+				[.${\sigma}_{S.t \leq 33 \wedge S.u \geq 27}$ 
+					[.${\pi}_{S.a, S.b, S.t, S.u}$
+						[.S ] 
+					]
+				] 
+				[.${\sigma}_{T.b \geq 9}$ 
+					[.${\pi}_{T.s, T.b}$
+						[.T ] 
+					]  
+				]
+			]
+		] 
+	] 
+]
+
+\subsubsection{}
+Since we defined predicates on attributes used in joins, we can also apply and push down those predicates on the key-attributes of the opposing relation.
+
+\Tree
+[.${\pi}_{Q.m, R.o, S.a}$ 
+	[.${\Join}_{R.t=S.b}$ 
+		[.${\pi}_{Q.m, R.o, R.t}$
+			[.${\Join}_{Q.s=R.e}$ 
+				[.${\sigma}_{Q.s = 18}$ 
+					[.${\pi}_{Q.m, Q.s}$
+						[.Q ] 
+					] 
+				]
+				[.${\sigma}_{R.e = 18}$ 
+					[.${\pi}_{R.o, R.t, R.e}$
+						[.R ] 
+					]  
+				] 
+			]
+		] 
+		[.${\pi}_{S.a, S.b}$
+			[.${\Join}_{S.u=T.s}$ 
+				[.${\sigma}_{S.t \leq 33 \wedge S.u \geq 27}$ 
+					[.${\pi}_{S.a, S.b, S.t, S.u}$
+						[.S ] 
+					]
+				] 
+				[.${\sigma}_{T.b \geq 9 \wedge T.s \geq 27}$ 
+					[.${\pi}_{T.s, T.b}$
+						[.T ] 
+					]  
+				]
+			]
+		] 
+	] 
+]
+
+\end{document}
