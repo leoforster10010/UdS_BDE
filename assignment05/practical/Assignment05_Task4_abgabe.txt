@@ -1,0 +1,65 @@
+# A class implementing a recursive, inverted index
+class RecursiveInvertedIndex:
+
+    # Dictionary to store the word-to-document mapping
+    word_dict = {}
+
+    def create_key_values(self, file_list):
+        """
+        Create a dictionary where each key is a word and the value is a set of filenames 
+        that contain the word.
+            
+        Returns:
+            dict: Dictionary with words as keys and sets of filenames as values.
+        """
+        output_dict = {}
+
+        # Process each file in the file list
+        for file in file_list:
+            words = get_words_from_document(file)  # Extract words from the document
+            for word in words:
+                if word not in output_dict:
+                    output_dict[word] = set()  # Initialize set for new word
+                output_dict[word].add(file)  # Add the file to the set for the word
+
+        return output_dict
+
+        
+    def radix_indexer(self):
+        """
+        Create a recursive index by generating substrings of words and mapping them 
+        to the sets of documents containing the original words.
+        """
+        temp_word_dict = {}
+        word_dict = self.word_dict
+
+        # Iterate through each word and its associated document set
+        for word, doc_set in word_dict.items():
+            # Generate all substrings of the word
+            for i in range(1, len(word) + 1):
+                substring = word[:i]  # Create a substring from the beginning to the ith character
+                if substring not in temp_word_dict:
+                    temp_word_dict[substring] = set()  # Initialize set for new substring
+                temp_word_dict[substring].update(doc_set)  # Add the document set to the substring
+
+        self.word_dict = temp_word_dict  # Update the word_dict with the new recursive index
+
+    def __init__(self, document_names):
+        """
+        Initialize the RecursiveInvertedIndex with a list of document names. (Constructor)
+        """
+        self.word_dict = self.create_key_values(document_names)  # Create the initial word-to-document mapping
+        self.radix_indexer()  # Perform the radix indexing to generate substrings
+
+    def search(self, word): 
+        """
+        Search for documents containing the exact word or any word that starts with the given word.
+        
+        Returns:
+            set: Set of filenames containing the word or any word starting with the given word.
+        """
+        documents = set()
+        for key, value in self.word_dict.items():
+            if word.lower() == key.lower():
+                documents.update(value)  # Add documents containing the word to the result set
+        return documents
