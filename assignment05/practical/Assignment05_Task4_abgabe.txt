@@ -15,7 +15,7 @@ class RecursiveInvertedIndex:
         output_dict = {}
 
         # Process each file in the file list
-        for file in file_list:
+        for file in file_list:e
             words = get_words_from_document(file)  # Extract words from the document
             for word in words:
                 if word not in output_dict:
