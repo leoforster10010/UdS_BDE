@@ -1,0 +1,94 @@
+\input{header}
+\input{macros}
+\sheet{1}
+\begin{document}
+
+\section{Cost-based Optimisation}	
+	
+\subsection{$($a$)$}
+
+1. Dataset:
+
+Costs $B, B.s = 12$:
+\begin{itemize}
+	\item scan: $300,000$
+	\item index: $252,018.19$
+\end{itemize}
+$=>$ use index
+
+Costs $C.z \neq 17$:
+\begin{itemize}
+	\item scan: $50,000$
+	\item index: $21,015.61$
+\end{itemize}
+$=>$ use index
+
+Costs $C.c < 123$:
+\begin{itemize}
+	\item scan: $50,000$
+	\item index: $105.015,61$
+\end{itemize}
+$=>$ use scan
+
+
+2. Dataset:
+
+Costs $B, B.s = 12$:
+\begin{itemize}
+	\item scan: $70,000$
+	\item index: $117,616.10$
+\end{itemize}
+$=>$ use scan
+
+Costs $C.z \neq 17$:
+\begin{itemize}
+	\item scan: $150,000$
+	\item index: $94,517.19$
+\end{itemize}
+$=>$ use index
+
+Costs $C.c < 123$:
+\begin{itemize}
+	\item scan: $150,000$
+	\item index: $472.517,19$
+\end{itemize}
+$=>$ use scan
+
+
+Thus, for dataset 1:
+\begin{itemize}
+	\item ${\sigma}_{B.s=12}$ should be replaced with ${\sigma \_IndexBased}_{B.s=12}$
+	\item ${\sigma}_{C.c<123}$ should be replaced with ${\sigma \_ScanBased}_{C.c<123}$
+	\item ${\sigma}_{C.z \neq 17}$ should be replaced with ${\sigma \_IndexBased}_{C.z \neq 17}$
+\end{itemize}
+
+
+For dataset 2:
+\begin{itemize}
+	\item ${\sigma}_{B.s=12}$ should be replaced with ${\sigma \_ScanBased}_{B.s=12}$
+	\item ${\sigma}_{C.c<123}$ should be replaced with ${\sigma \_ScanBased}_{C.c<123}$
+	\item ${\sigma}_{C.z \neq 17}$ should be replaced with ${\sigma \_IndexBased}_{C.z \neq 17}$
+\end{itemize}
+
+
+\subsection{$($b$)$}
+
+Given the rule, to use the index if: $scan(T) > index(T,p)$:
+
+\[
+|T| > \log_2(|T|) + 42 \cdot \text{sel}(p) \cdot |T|
+\]
+
+Solving this for $\text{sel}(p)$ we get:
+
+\[
+\text{sel}(p) < \frac{|T| - \log_2(|T|)}{|T| \cdot 42}
+\]
+
+With large table sizes this approximates:
+
+\[
+\text{sel}(p) \approx \frac{1}{42} \approx 0.024
+\]
+
+\end{document}
