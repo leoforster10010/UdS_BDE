@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load highlight %}
+
+{% block title %}Timeline{% endblock %}
+
+{% block body %}
+
+
+    <br>
+    <div class="card"
+         style="margin-bottom: 20px; border-color: white; width: 300px; margin-left: auto; margin-right: 40px;">
+        <form action="/sn/html/timeline" method="get">
+            <div class="flex-container">
+                <input type="text" name="search" placeholder={{ searchkeyword }}>
+                <button type="submit" class="btn btn-secondary">Search</button>
+            </div>
+        </form>
+    </div>
+    <br>
+    <div class="card" style="margin-bottom: 20px; margin-left: 40px; margin-right: 40px;">
+        <form action="/sn/api/posts" method="post">
+            {% csrf_token %}
+            <textarea class="form-control" rows="5" name="text"></textarea>
+            <button type="submit" class="btn btn-secondary">Post</button>
+        </form>
+    </div>
+    {% for post in posts %}
+        <div class="card"
+             style="margin-bottom: 20px; margin-left: 40px; margin-right: 40px; background-color: {% if post.published %}white{% else %}mistyrose{% endif %};">
+            <div class="flex-container">
+                <b><a href="/fame/html/fame?userid={{ post.author.id }}">{{ post.author.name|highlight:searchkeyword }}
+                </b></a>&nbsp;
+                <span style="color:gray">{{ post.author.email|highlight:searchkeyword }}</span>&nbsp;&nbsp;
+                <span style="color:gray">{{ post.date_submitted }}</span>
+                {% if not post.published %}
+                    <span style="color:red">&nbsp;[not published, only visible for you]</span>
+                {% endif %}
+                {% if post.published and post.author.id == request.user.id %}
+                    <span style="color:green">&nbsp;[published, visible for everybody]</span>
+                {% endif %}
+            </div>&nbsp;<br>
+            <p>{{ post.content|highlight:searchkeyword }}</p>
+
+            <div class="flex-container">
+                {% for key,value in post.expertise_area_and_truth_ratings.items %}
+                    {% if value.numeric_value < 0 %}
+                        <div class="bullshit"><b>{{ key }}</b>: {{ value.name }}</div>
+                    {% elif value.numeric_value > 0 %}
+                        <div class="ok"><b>{{ key }}</b>: {{ value.name }}</div>
+                    {% else %}
+                        <div class="neutral"><b>{{ key }}</b>: {{ value.name }}</div>
+                    {% endif %}
+                {% endfor %}<br>
+            </div>
+            <div class="flex-container">
+                <div><i class="fa-regular fa-comment" style="color:gray;"></i> {{ post.citations }}</div>
+                <div><i class="fa-solid fa-retweet" style="color:gray;"></i> {{ post.replies }}</div>
+                {% for key,value in post.user_ratings.items %}
+                    {% if key == "A" %}
+                        <div><i class="fa-solid fa-thumbs-up" style="color:blue;"></i>&nbsp;{{ value }}</div>
+                    {% elif key == "L" %}
+                        <div><i class="fa-solid fa-heart" style="color:green;"></i>&nbsp;{{ value }}</div>
+                    {% elif key == "D" %}
+                        <div><i class="fa-solid fa-thumbs-down" style="color:red;"></i> {{ value }}</div>
+                    {% endif %}
+                {% endfor %}
+                <div><i class="fa-solid fa-chart-simple" style="color:gray;"></i> 0</div>
+            </div>
+        </div>
+    {% endfor %}
+    <br><br>
+
+{% endblock %}

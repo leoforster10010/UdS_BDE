@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}TimelFame Social Network: Available URIsine{% endblock %}
+
+{% block body %}
+    <br>
+    <form action="" method="post">
+        {% csrf_token %}
+        <label for="">Email</label>
+        <input type="text" name="username" id="">
+        <label for="">Password</label>
+        <input type="password" name="password" id="">
+        <button type="submit" class="btn btn-secondary">Login</button>
+    </form>
+    <br>
+    If in doubt, use the following credentials:<br>
+    email: a@b.de<br>
+    password: test
+{% endblock %}

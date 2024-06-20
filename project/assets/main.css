@@ -1,0 +1,36 @@
+html {
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-container > div {
+    margin: 10px;
+    padding: 3px;
+    font-size: 13px;
+}
+
+.highlight {
+    background-color: yellow;
+}
+
+.bullshit {
+    background-color: lightcoral;
+}
+
+.ok {
+    background-color: lightgreen;
+}
+
+.neutral {
+    background-color: lightgray;
+}

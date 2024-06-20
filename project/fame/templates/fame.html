@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load unnest_json %}
+
+{% load static %}
+{% load highlight %}
+
+{% block title %}Timeline{% endblock %}
+
+{% block body %}
+
+    <style>
+
+    </style>
+    <br>
+    <h2>Fame for user {{ user }}</h2>
+    <br>
+    {% for f in fame %}
+        <div class="card" style="margin-bottom: 20px; margin-left: 40px; margin-right: 40px;">
+            <div class="flex-container">
+                {% if f.score.numeric < 0 %}
+                    <div class="bullshit"><b>{{ f.expertise_area.label }}</b>: {{ f.score.name }}</div>
+                {% elif f.score.numeric > 0 %}
+                    <div class="ok"><b>{{ f.expertise_area.label }}</b>: {{ f.score.name }}</div>
+                {% else %}
+                    <div class="neutral"><b>{{ f.expertise_area.label }}</b>: {{ f.score.name }}</div>
+                {% endif %}
+                {% if f.expertise_area.parent_expertise_area %}
+                    <div><i class='fa-solid fa-arrow-right'></i>
+                        &nbsp;&nbsp;{{ f.expertise_area.parent_expertise_area|unnnest_json }}
+                    </div>
+                {% endif %}
+                <br>
+            </div>
+        </div>
+    {% endfor %}
+    <br><br>
+
+{% endblock %}

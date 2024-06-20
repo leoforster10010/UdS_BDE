@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}TimelFame Social Network: Available URIsine{% endblock %}
+
+{% block body %}
+
+
+    <h1>Available URIs</h1>
+
+    <h2>Fame App</h2>
+    <h3>API</h3>
+    <ul>
+        <li>
+            <a href="/fame/api/users">Users</a>
+        </li>
+        <li>
+            <a href="/fame/api/fame">Fame</a>
+        </li>
+        <li>
+            <a href="/fame/api/expertise_areas">Expertise Areas</a>
+        </li>
+    </ul>
+    <h3>HTML Views</h3>
+    <ul>
+        <li>
+            TODO
+        </li>
+    </ul>
+    <h2>Social Network App</h2>
+    <h3>API</h3>
+    <ul>
+        <li>
+            <a href="/sn/api/posts?published=True">Published Posts</a>
+        </li>
+        <li>
+            <a href="/sn/api/posts?published=False">Unpublished Posts</a>
+        </li>
+    </ul>
+    <h3>HTML Views</h3>
+    <ul>
+        <li>
+            <a href="/">Login</a>
+        </li>
+        <li>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">logout</button>
+            </form>
+        </li>
+        <li>
+            <a href="/sn/html/timeline?published=True">Published Posts Timeline</a>
+        </li>
+        <li>
+            <a href="/sn/html/timeline?published=False">Unpublished Posts Timeline</a>
+        </li>
+        <li>
+            <a href="/sn/html/timeline?search=around">Search (with keyword "around")</a>
+        </li>
+    </ul>
+
+
+{% endblock %}

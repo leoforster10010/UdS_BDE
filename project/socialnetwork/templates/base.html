@@ -1,0 +1,103 @@
+{% load static %}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="text/html"/>
+    <title>{% block title %}Default title{% endblock %}</title>
+    <link
+            rel="stylesheet"
+            href="{% static 'bootstrap.min.css' %}"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'bootstrap-icons.css' %}"
+    />
+    <link
+            rel="stylesheet"
+            href="{% static 'fa/css/all.min.css' %}"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+            integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+    />
+    <link rel="stylesheet" href="{% static 'main.css' %}"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<div class="body-content">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item active">
+                        <a class="navbar-brand" href="{% url 'sn:timeline' %}">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="navbar-brand" href="{% url 'home' %}">URIs</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false" data-testid="navbar_user_section">
+                        {% if user.is_authenticated %}
+                            <span>{{ request.user.first_name }} {{ request.user.last_name }}</span>
+                        {% else %}
+                            <span>Not logged in</span>
+                        {% endif %}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    </div>
+            </ul>
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">logout</button>
+                </form>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div id="wrap">
+        <div class="container-fluid" id="main">
+            {% block body %} {% endblock %}
+        </div>
+    </div>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% block content %} {% endblock %}
+
+    <footer
+            class="page-footer fixed-bottom font-small bg-dark pt-1"
+            style="color: gray"
+    >
+        <div style="display: flex; justify-content: space-between">
+            <div style="margin-left: 10px; margin-right: 10px">Fame Social Network</div>
+            <div style="margin-right: 10px">
+                <a
+                        style="color: gray"
+                        href="https://www.uni-saarland.de/en/legal-notice.html"
+                        data-testid="footer_impressum"
+                >Impressum/Legal Notice</a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+</body>
+</html>
