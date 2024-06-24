@@ -299,7 +299,7 @@ class StudentTasksTests(TestCase):
         self.assertTrue(new_fame_level.name == "Dangerous Bullshitter")
 
         user_reread = SocialNetworkUsers.objects.get(id=user.id)
-        self.assertTrue(user_reread.is_banned)
+        self.assertFalse(user_reread.is_active)
 
         # restore old fame level:
         old_fame_entry.fame_level = old_fame_level
