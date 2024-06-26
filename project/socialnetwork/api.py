@@ -113,6 +113,10 @@ def submit_post(
     #########################
     # add your code here
     #########################
+    for expertise_area in _expertise_areas:
+        if user.expertise_area.filter(label=expertise_area).exists():
+            post.published = False
+            break
 
     post.save()
 
