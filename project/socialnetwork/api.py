@@ -1,7 +1,8 @@
 from django.db.models import Q
 
-from fame.models import Fame, FameLevels
-from socialnetwork.models import Posts, SocialNetworkUsers
+from fame.models import Fame, FameLevels, ExpertiseAreas
+from socialnetwork.models import Posts, SocialNetworkUsers, PostExpertiseAreasAndRatings
+
 
 # general methods independent of html and REST views
 # should be used by REST and html views
@@ -25,7 +26,7 @@ def timeline(user: SocialNetworkUsers, start: int = 0, end: int = None, publishe
     if end is None:
         return posts[start:]
     else:
-        return posts[start : end + 1]
+        return posts[start: end + 1]
 
 
 def search(keyword: str, start: int = 0, end: int = None, published=True):
@@ -40,7 +41,7 @@ def search(keyword: str, start: int = 0, end: int = None, published=True):
     if end is None:
         return posts[start:]
     else:
-        return posts[start : end + 1]
+        return posts[start: end + 1]
 
 
 def follows(user: SocialNetworkUsers, start: int = 0, end: int = None):
@@ -49,7 +50,7 @@ def follows(user: SocialNetworkUsers, start: int = 0, end: int = None):
     if end is None:
         return _follows[start:]
     else:
-        return _follows[start : end + 1]
+        return _follows[start: end + 1]
 
 
 def followers(user: SocialNetworkUsers, start: int = 0, end: int = None):
@@ -58,7 +59,7 @@ def followers(user: SocialNetworkUsers, start: int = 0, end: int = None):
     if end is None:
         return _followers[start:]
     else:
-        return _followers[start : end + 1]
+        return _followers[start: end + 1]
 
 
 def follow(user: SocialNetworkUsers, user_to_follow: SocialNetworkUsers):
@@ -80,10 +81,10 @@ def unfollow(user: SocialNetworkUsers, user_to_unfollow: SocialNetworkUsers):
 
 
 def submit_post(
-    user: SocialNetworkUsers,
-    content: str,
-    cites: Posts = None,
-    replies_to: Posts = None,
+        user: SocialNetworkUsers,
+        content: str,
+        cites: Posts = None,
+        replies_to: Posts = None,
 ):
     """Submit a post for publication. Assumes that the user is authenticated.
     returns a tuple of three elements:
@@ -109,14 +110,39 @@ def submit_post(
 
     redirect_to_logout = False
 
-
     #########################
     # add your code here
     #########################
+
     for expertise_area in _expertise_areas:
-        if user.expertise_area.filter(label=expertise_area).exists():
-            post.published = False
-            break
+        if Fame.objects.filter(user=user, expertise_area__label=expertise_area["expertise_area"]).exists():
+            
+            # T1
+            fame_record = Fame.objects.filter(user=user, expertise_area__label=expertise_area["expertise_area"]).select_related('fame_level').first()
+            if fame_record and fame_record.fame_level.numeric_value < 0:
+                post.published = False
+
+            # T2
+            if PostExpertiseAreasAndRatings.objects.filter(post=post, expertise_area__label=expertise_area[
+                "expertise_area"]).exists():
+                post_expertise_area = PostExpertiseAreasAndRatings.objects.filter(post=post,
+                                                                               expertise_area__label=expertise_area[
+                                                                                   "expertise_area"]).first()
+                # T2a
+                if post_expertise_area and post_expertise_area.truth_rating.numeric_value < 0:
+                    try:
+                        fame_record.fame_level = fame_record.fame_level.get_next_lower_fame_level()
+                    except ValueError:
+                        # T2c
+                        user.is_active = False
+                        user.is_banned = True
+                        redirect_to_logout = True
+                        pass
+        # T2b        
+        else:
+            new_expertise_area = ExpertiseAreas.objects.create(label=expertise_area["expertise_area"])
+            confuser_Level = FameLevels.objects.get(name="Confuser")
+            Fame.objects.create(user=user, expertise_area=new_expertise_area, fame_level=confuser_Level)
 
     post.save()
 
@@ -128,7 +154,7 @@ def submit_post(
 
 
 def rate_post(
-    user: SocialNetworkUsers, post: Posts, rating_type: str, rating_score: int
+        user: SocialNetworkUsers, post: Posts, rating_type: str, rating_score: int
 ):
     """Rate a post. Assumes that the user is authenticated. If user already rated the post with the given rating_type,
     update that rating score."""
@@ -168,8 +194,6 @@ def fame(user: SocialNetworkUsers):
     return user, Fame.objects.filter(user=user)
 
 
-
-
 def experts():
     """Return for each existing expertise area in the fame profiles a list of the users having positive fame for that
     expertise area. The list should be a Python dictionary with keys ``user'' (for the user) and ``fame_level_numeric''
@@ -183,7 +207,6 @@ def experts():
     #########################
 
 
-
 def bullshitters():
     """Return for each existing expertise area in the fame profiles a list of the users having negative fame for that
     expertise area. The list should be a Python dictionary with keys ``user'' (for the user) and ``fame_level_numeric''
@@ -195,4 +218,3 @@ def bullshitters():
     #########################
     # add your code here
     #########################
-
