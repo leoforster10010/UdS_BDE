@@ -114,35 +114,53 @@ def submit_post(
     # add your code here
     #########################
 
-    for expertise_area in _expertise_areas:
-        if Fame.objects.filter(user=user, expertise_area__label=expertise_area["expertise_area"]).exists():
-            
-            # T1
-            fame_record = Fame.objects.filter(user=user, expertise_area__label=expertise_area["expertise_area"]).select_related('fame_level').first()
-            if fame_record and fame_record.fame_level.numeric_value < 0:
-                post.published = False
+    #T1
+    for expertise_area in post.expertise_area_and_truth_ratings.all():
+        fame_record = user.fame_set.filter(expertise_area=expertise_area).first()
+        # contained in the user’s fame profile and marked negative there?
+        if fame_record and fame_record.fame_level.numeric_value < 0:
+            post.published = False
 
-            # T2
-            if PostExpertiseAreasAndRatings.objects.filter(post=post, expertise_area__label=expertise_area[
-                "expertise_area"]).exists():
-                post_expertise_area = PostExpertiseAreasAndRatings.objects.filter(post=post,
-                                                                               expertise_area__label=expertise_area[
-                                                                                   "expertise_area"]).first()
-                # T2a
-                if post_expertise_area and post_expertise_area.truth_rating.numeric_value < 0:
-                    try:
-                        fame_record.fame_level = fame_record.fame_level.get_next_lower_fame_level()
-                    except ValueError:
-                        # T2c
-                        user.is_active = False
-                        user.is_banned = True
-                        redirect_to_logout = True
-                        pass
-        # T2b        
+    for post_expertise_area in post.postexpertiseareasandratings_set.all():
+        fame_record = user.fame_set.filter(expertise_area=post_expertise_area.expertise_area).first()
+        # T1: contained in the user’s fame profile and marked negative there?
+        if fame_record and fame_record.fame_level.numeric_value < 0:
+            post.published = False
+
+        # T2: posts with negative truth rating
+        if post_expertise_area.truth_rating is None or post_expertise_area.truth_rating.numeric_value >= 0:
+            continue
+
+        # T2a: expertise area is already contained in the user’s fame profile
+        if fame_record:
+            # lower the fame to the next possible level
+            try:
+                fame_record.fame_level = fame_record.fame_level.get_next_lower_fame_level()
+                fame_record.save()
+            # T2c: ban the user
+            except ValueError:
+                user.is_active = False
+                user.is_banned = True
+                redirect_to_logout = True
+                # unpublishing all her/his posts
+                for post in user.posts_set.all():
+                    post.published = False
+                    post.save()
+                user.save()
+        # T2b: add an entry in the user’s fame profile with fame level “Confuser”.
         else:
-            new_expertise_area = ExpertiseAreas.objects.create(label=expertise_area["expertise_area"])
-            confuser_Level = FameLevels.objects.get(name="Confuser")
-            Fame.objects.create(user=user, expertise_area=new_expertise_area, fame_level=confuser_Level)
+            try:
+                new_expertise_area = ExpertiseAreas.objects.get(label=post_expertise_area.expertise_area.label)
+            except ExpertiseAreas.DoesNotExist:
+                new_expertise_area = ExpertiseAreas.objects.create(label=post_expertise_area.expertise_area.label)
+
+            try:
+                confuser_Level = FameLevels.objects.get(name="Confuser")
+            except FameLevels.DoesNotExist:
+                confuser_Level = FameLevels.objects.create(name="Confuser", numeric_value=-10)
+
+            new_entry = Fame.objects.create(user=user, expertise_area=new_expertise_area, fame_level=confuser_Level)
+            new_entry.save()
 
     post.save()
 
