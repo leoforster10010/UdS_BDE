@@ -276,7 +276,7 @@ class StudentTasksTests(TestCase):
         # for this user: send a new post with the exact same content:
         # recall, that eas and truth ratings are guaranteed to be the same for the same content
         if use_DRF_endpoint:
-            self.client.login(email=user.email, password="test")
+            self.client.login(email=user.email, password="test.py")
             ret = self.client.post(
                 "/sn/api/posts",
                 {"text": content},
@@ -318,7 +318,7 @@ class StudentTasksTests(TestCase):
     def test_T2c_3(self):  # implemented and tested
         # disallowing him/her to ever login again.
         user = self._user_is_banned_test()
-        login = self.client.login(email=user.email, password="test")
+        login = self.client.login(email=user.email, password="test.py")
         self.assertFalse(login)
 
     def test_T2c_4(self):  # implemented and tested
@@ -332,7 +332,7 @@ class StudentTasksTests(TestCase):
             self.assertFalse(post.published)
 
     def _test_containment(self, my_dictionary, filter_conditions, reverse=False):
-        # test whether everything returned is actually contained in the database:
+        # test.py whether everything returned is actually contained in the database:
         test_set = set()
         for ea, value in my_dictionary.items():
             # print(ea)
@@ -350,7 +350,7 @@ class StudentTasksTests(TestCase):
                         fame_level__numeric_value=fame_level_numeric,
                     ).exists()
                 )
-                # sort by numeric_value (or reversed), test this:
+                # sort by numeric_value (or reversed), test.py this:
                 self.assertTrue(
                     previous_fame_level_numeric is None  # first iteration or new ea
                     or (
@@ -366,7 +366,7 @@ class StudentTasksTests(TestCase):
                         )  # sort on numeric_value ascending
                     )
                 )
-                # within that tie sort by date_joined (most recent first), test this:
+                # within that tie sort by date_joined (most recent first), test.py this:
                 self.assertTrue(
                     previous_date_joined is None  # first iteration or new ea
                     or previous_fame_level_numeric != fame_level_numeric  # new fame level
@@ -376,10 +376,10 @@ class StudentTasksTests(TestCase):
                 previous_date_joined = user.date_joined
                 previous_fame_level_numeric = fame_level_numeric
 
-                # add to test set for vice versa test:
+                # add to test.py set for vice versa test.py:
                 test_set.add((user, ea, fame_level_numeric))
 
-        # vice versa: test whether everything in the database is contained in the result:
+        # vice versa: test.py whether everything in the database is contained in the result:
         for fame_entry in Fame.objects.filter(**filter_conditions):
             user = fame_entry.user
             ea = fame_entry.expertise_area

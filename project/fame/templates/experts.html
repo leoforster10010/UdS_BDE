@@ -1,0 +1,34 @@
+{# Here just copying styles, base frame, etc. #}
+{% extends "base.html" %}
+{#{% load unnest_json %}#}
+{#{% load static %}#}
+{#{% load highlight %}#}
+
+
+{% block title %}Experts{% endblock %}
+{% block body %}
+    {# Here starts the real implementation#}
+    <h1>Expert Area List</h1>
+    {# Go through every Expertise Area and list the Users that are experts#}
+    {# Because experts is a dictionary, we need to use items to dereference the key-value Pairs#}
+    {# The key is the expertise are and the value is the list of Users#}
+    {% for expertise_area, users in experts.items %}
+        {# Just ist the same style for the divs as in fame.html#}
+        <div class="card" style="margin-bottom: 20px; margin-left: 40px; margin-right: 40px;">
+            {# Explicitly State the Name of the Area#}
+            <h2>{{ expertise_area.label }}</h2>
+            {# Create an unordered List of for the listing of the usernames#}
+            <ul>
+                {# Inner Loop for every Users that is an Expert in the Area#}
+                {# Just iterate through each element of the list (the elements are dicts themselves) #}
+                {% for user_dict in users %}
+                    <li>{{ user_dict.user.username }} - Fame Level: {{ user_dict.fame_level_numeric }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+            {#Print Message, if the list is empty (Executed after for loop)#}
+            {% empty %}
+                <p>No experts available.</p>
+    {% endfor %}
+    <br><br>
+{% endblock %}

@@ -26,7 +26,7 @@ def create_fake_data():
             first_name=first_name,
             last_name=last_name,
         )
-        user.set_password("test")
+        user.set_password("test.py")
         user.save()
 
     user = SocialNetworkUsers.objects.create(
@@ -34,7 +34,7 @@ def create_fake_data():
         first_name="Tom",
         last_name="Petersson",
     )
-    user.set_password("test")
+    user.set_password("test.py")
     user.save()
 
     # create followers:

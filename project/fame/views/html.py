@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from fame.models import Fame
 from fame.serializers import FameSerializer
 from socialnetwork import api
 from socialnetwork.api import _get_social_network_user
@@ -28,3 +29,12 @@ def fame_list(request):
         "user": user if user else "",
     }
     return render(request, "fame.html", context=context)
+
+# New function for displaying the Expert List
+# I decided to omit the authentication because why not :-)
+@require_http_methods(["GET"])
+def experts_list(request):
+    # Just call Leos function (T3)
+    experts_dict = api.experts()
+    # return the rendered HTML website, given the template experts.html and the context of the experts_dict
+    return render(request, "experts.html", context={"experts": experts_dict})

@@ -7,7 +7,7 @@ user_mapping = {
 }
 
 
-def login_and_check_whether_user_logged_in_and_log_out(self, email, password="test"):
+def login_and_check_whether_user_logged_in_and_log_out(self, email, password="test.py"):
     """
     checks if a user can be logged in and out with the given password
     """
@@ -55,7 +55,7 @@ def test_paths_for_allowed_and_forbidden_users(
                 no_login = True
             if not no_login:
                 # login
-                login = self.client.login(email=user, password="test")
+                login = self.client.login(email=user, password="test.py")
 
                 # check that we are logged in:
                 auth_user = get_user(self.client)
