@@ -1,14 +1,14 @@
 {# Here just copying styles, base frame, etc. #}
 {% extends "base.html" %}
 
-{% block title %}Experts{% endblock %}
+{% block title %}Bullshitters{% endblock %}
 {% block body %}
     {# Here starts the real implementation#}
-    <h1>Expert List</h1>
-    {# Go through every Expertise Area and list the Users that are experts#}
-    {# Because experts is a dictionary, we need to use items to dereference the key-value Pairs#}
+    <h1>Bullshitter List</h1>
+    {# Go through every Expertise Area and list the Users that are bullshitters#}
+    {# Because bullshitters is a dictionary, we need to use items to dereference the key-value Pairs#}
     {# The key is the expertise are and the value is the list of Users#}
-    {% for expertise_area, users in experts.items %}
+    {% for expertise_area, users in bullshitters.items %}
         {# Just ist the same style for the divs as in fame.html#}
         <div class="card" style="margin-bottom: 20px; margin-left: 40px; margin-right: 40px;">
             {# Explicitly State the Name of the Area#}
@@ -18,7 +18,7 @@
                 {# Inner Loop for every Users that is an Expert in the Area#}
                 {# Just iterate through each element of the list (the elements are dicts themselves) #}
                 {% for user_dict in users %}
-                    <li style="color: seagreen;">{{ user_dict.user.username }} - Fame Level: {{ user_dict.fame_level_numeric }}</li>
+                    <li style="color: crimson;">{{ user_dict.user.username }} - Fame Level: {{ user_dict.fame_level_numeric }}</li>
                 {% endfor %}
             </ul>
         </div>

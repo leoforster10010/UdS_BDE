@@ -1,6 +1,6 @@
 from django.urls import path
 
-from fame.views.html import fame_list, experts_list
+from fame.views.html import fame_list, experts_list, bullshitters_list
 from fame.views.rest import ExpertiseAreasApiView, FameUsersApiView, FameListApiView
 
 app_name = "fame"
@@ -13,5 +13,5 @@ urlpatterns = [
     path("api/fame", FameListApiView.as_view(), name="fame_fulllist"),
     path("html/fame", fame_list, name="fame_list"),
     path("html/experts", experts_list, name="experts_list"),
-    # path("html/bullshitters", fame_list, name="fame_list"),
+    path("html/bullshitters", bullshitters_list, name="fame_list"),
 ]

@@ -38,3 +38,10 @@ def experts_list(request):
     experts_dict = api.experts()
     # return the rendered HTML website, given the template experts.html and the context of the experts_dict
     return render(request, "experts.html", context={"experts": experts_dict})
+
+@require_http_methods(["GET"])
+def bullshitters_list(request):
+    # Call Leos function (T4)
+    bullshitters_dict = api.bullshitters()
+    # return the rendered HTML website, given the template bullshitters.html and the context of the bullshitters_dict
+    return render(request, "bullshitters.html", context={"bullshitters": bullshitters_dict})
