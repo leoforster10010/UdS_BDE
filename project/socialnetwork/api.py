@@ -1,7 +1,7 @@
 from django.db.models import Q
 
 from fame.models import Fame, FameLevels, ExpertiseAreas
-from socialnetwork.models import Posts, SocialNetworkUsers, PostExpertiseAreasAndRatings
+from socialnetwork.models import Posts, SocialNetworkUsers
 
 
 # general methods independent of html and REST views
@@ -219,10 +219,31 @@ def experts():
     there is a tie, within that tie sort by date_joined (most recent first). Note that expertise areas with no expert
     may be omitted.
     """
-    pass
+
     #########################
     # add your code here
     #########################
+    experts = dict()
+
+    for expertise_area in ExpertiseAreas.objects.all():
+        expert_fame_entries = expertise_area.fame_set.filter(fame_level__numeric_value__gt=0).order_by(
+            '-fame_level__numeric_value', '-user__date_joined').all()
+
+        if expert_fame_entries.count() == 0:
+            continue
+
+        ea_experts = list()
+
+        for entry in expert_fame_entries:
+            fame = expertise_area.fame_set.get(user=entry.user).fame_level.numeric_value
+            ea_experts.append({
+                'user': entry.user,
+                'fame_level_numeric': fame
+            })
+
+        experts[expertise_area] = ea_experts
+
+    return experts
 
 
 def bullshitters():
@@ -232,7 +253,28 @@ def bullshitters():
     there is a tie, within that tie sort by date_joined (most recent first). Note that expertise areas with no expert
     may be omitted.
     """
-    pass
+
     #########################
     # add your code here
     #########################
+    bullshitters = dict()
+
+    for expertise_area in ExpertiseAreas.objects.all():
+        bullshitters_fame_entries = expertise_area.fame_set.filter(fame_level__numeric_value__lt=0).order_by(
+            'fame_level__numeric_value', '-user__date_joined').all()
+
+        if bullshitters_fame_entries.count() == 0:
+            continue
+
+        ea_bullshitters = list()
+
+        for entry in bullshitters_fame_entries:
+            fame = expertise_area.fame_set.get(user=entry.user).fame_level.numeric_value
+            ea_bullshitters.append({
+                'user': entry.user,
+                'fame_level_numeric': fame
+            })
+
+        bullshitters[expertise_area] = ea_bullshitters
+
+    return bullshitters
