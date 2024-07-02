@@ -37,6 +37,7 @@ def experts_list(request):
     # Just call Leos function (T3)
     experts_dict = api.experts()
     # return the rendered HTML website, given the template experts.html and the context of the experts_dict
+    # in the context the key is the name of the variable in the html page, and the value is our object
     return render(request, "experts.html", context={"experts": experts_dict})
 
 @require_http_methods(["GET"])
@@ -44,4 +45,5 @@ def bullshitters_list(request):
     # Call Leos function (T4)
     bullshitters_dict = api.bullshitters()
     # return the rendered HTML website, given the template bullshitters.html and the context of the bullshitters_dict
+    # in the context the key is the name of the variable in the html page, and the value is our object
     return render(request, "bullshitters.html", context={"bullshitters": bullshitters_dict})

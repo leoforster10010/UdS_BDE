@@ -16,7 +16,7 @@
             {# Create an unordered List of for the listing of the usernames#}
             <ul>
                 {# Inner Loop for every Users that is an Expert in the Area#}
-                {# Just iterate through each element of the list (the elements are dicts themselves) #}
+                {# Just iterate through each element of the list (the elements are objects themselves) #}
                 {% for user_dict in users %}
                     <li style="color: crimson;">{{ user_dict.user.username }} - Fame Level: {{ user_dict.fame_level_numeric }}</li>
                 {% endfor %}
