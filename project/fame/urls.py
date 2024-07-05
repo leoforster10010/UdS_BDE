@@ -14,4 +14,6 @@ urlpatterns = [
     path("html/fame", fame_list, name="fame_list"),
     path("html/experts", experts_list, name="experts_list"),
     path("html/bullshitters", bullshitters_list, name="fame_list"),
+    path('follow/<int:user_id>/', follow, name='follow'),
+    path('unfollow/<int:user_id>/', unfollow, name='unfollow'),
 ]
