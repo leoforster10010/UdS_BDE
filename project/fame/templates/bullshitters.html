@@ -6,7 +6,7 @@
     {# Here starts the real implementation#}
     <h1>Bullshitter List</h1>
     {# Go through every Expertise Area and list the Users that are bullshitters#}
-    {# Because bullshitters is a dictionary, we need to use items to dereference the key-value Pairs#}
+    {# Because bullshitters is a dictionary, we need to use iterate to dereference the key-value Pairs#}
     {# The key is the expertise are and the value is the list of Users#}
     {% for expertise_area, users in bullshitters.items %}
         {# Just ist the same style for the divs as in fame.html#}

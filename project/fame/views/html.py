@@ -33,6 +33,7 @@ def fame_list(request):
 # New function for displaying the Expert List
 # I decided to omit the authentication because why not :-)
 @require_http_methods(["GET"])
+@login_required
 def experts_list(request):
     # Just call Leos function (T3)
     experts_dict = api.experts()
@@ -41,6 +42,7 @@ def experts_list(request):
     return render(request, "experts.html", context={"experts": experts_dict})
 
 @require_http_methods(["GET"])
+@login_required
 def bullshitters_list(request):
     # Call Leos function (T4)
     bullshitters_dict = api.bullshitters()
