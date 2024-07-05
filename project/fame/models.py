@@ -99,3 +99,8 @@ class Fame(models.Model):
         ]
 
         db_table = "fame"
+
+class Following(models.Model):
+    """ Indicates followers and follows"""
+    follower = models.ForeignKey(FameUsers, related_name='following', on_delete=models.CASCADE)
+    followed = models.ForeignKey(FameUsers, related_name='followers', on_delete=models.CASCADE)
