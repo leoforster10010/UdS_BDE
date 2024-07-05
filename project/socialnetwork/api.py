@@ -223,24 +223,32 @@ def experts():
     #########################
     # add your code here
     #########################
+    
+    #dict for experts per ExpertiseArea
     experts = dict()
 
+    #iterate over all ExpertiseAreas
     for expertise_area in ExpertiseAreas.objects.all():
+        #get all fame entries with positive fame value, ordered by fame desc, date_joined desc
         expert_fame_entries = expertise_area.fame_set.filter(fame_level__numeric_value__gt=0).order_by(
             '-fame_level__numeric_value', '-user__date_joined').all()
 
+        #continue if no entries found
         if expert_fame_entries.count() == 0:
             continue
 
+        #experts for this ExpertiseArea
         ea_experts = list()
 
+        #iterate over all experts-fame entries 
         for entry in expert_fame_entries:
-            fame = expertise_area.fame_set.get(user=entry.user).fame_level.numeric_value
+            #add dict with user name & fame level to list
             ea_experts.append({
                 'user': entry.user,
-                'fame_level_numeric': fame
+                'fame_level_numeric': entry.fame_level.numeric_value
             })
 
+        #add list to dict
         experts[expertise_area] = ea_experts
 
     return experts
@@ -257,24 +265,32 @@ def bullshitters():
     #########################
     # add your code here
     #########################
+    
+    #dict for bullshitters per ExpertiseArea
     bullshitters = dict()
 
+    #iterate over all ExpertiseAreas
     for expertise_area in ExpertiseAreas.objects.all():
+        #get all fame entries with negative fame value, ordered by fame asc, date_joined desc
         bullshitters_fame_entries = expertise_area.fame_set.filter(fame_level__numeric_value__lt=0).order_by(
             'fame_level__numeric_value', '-user__date_joined').all()
-
+        
+        #continue if no entries found
         if bullshitters_fame_entries.count() == 0:
             continue
-
+        
+        #bullshitters for this ExpertiseArea
         ea_bullshitters = list()
-
+        
+        #iterate over all bullshitter-fame entries 
         for entry in bullshitters_fame_entries:
-            fame = expertise_area.fame_set.get(user=entry.user).fame_level.numeric_value
+            #add dict with user name & fame level to list
             ea_bullshitters.append({
                 'user': entry.user,
-                'fame_level_numeric': fame
+                'fame_level_numeric': entry.fame_level.numeric_value
             })
 
+        #add list to dict
         bullshitters[expertise_area] = ea_bullshitters
 
     return bullshitters
