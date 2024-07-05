@@ -49,3 +49,23 @@ def bullshitters_list(request):
     # return the rendered HTML website, given the template bullshitters.html and the context of the bullshitters_dict
     # in the context the key is the name of the variable in the html page, and the value is our object
     return render(request, "bullshitters.html", context={"bullshitters": bullshitters_dict})
+    
+# new function for following
+@require_http_methods(["POST"])
+@login_required
+def follow(request, username):
+    """define the two users to use the predefined follow function"""
+    follower = request.user
+    followed = api._get_social_network_user(username)
+    """No output, because we only update followed"""
+    result = follow(follower, followed)
+
+# new function for unfollowing
+@require_http_methods(["POST"])
+@login_required
+def unfollow(request, username):
+    """define the two users to use the predefined unfollow function"""
+    follower = request.user
+    followed = api._get_social_network_user(username)
+    """No output, because we only update unfollowed"""
+    result = unfollow(follower, followed)
