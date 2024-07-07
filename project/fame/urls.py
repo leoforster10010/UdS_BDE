@@ -1,6 +1,6 @@
 from django.urls import path
 
-from fame.views.html import fame_list, experts_list, bullshitters_list
+from fame.views.html import fame_list, experts_list, bullshitters_list, follow, unfollow
 from fame.views.rest import ExpertiseAreasApiView, FameUsersApiView, FameListApiView
 
 app_name = "fame"
