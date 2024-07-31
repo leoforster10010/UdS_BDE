@@ -114,13 +114,6 @@ def submit_post(
     # add your code here
     #########################
 
-    #T1
-    for expertise_area in post.expertise_area_and_truth_ratings.all():
-        fame_record = user.fame_set.filter(expertise_area=expertise_area).first()
-        # contained in the user’s fame profile and marked negative there?
-        if fame_record and fame_record.fame_level.numeric_value < 0:
-            post.published = False
-
     for post_expertise_area in post.postexpertiseareasandratings_set.all():
         fame_record = user.fame_set.filter(expertise_area=post_expertise_area.expertise_area).first()
         # T1: contained in the user’s fame profile and marked negative there?
